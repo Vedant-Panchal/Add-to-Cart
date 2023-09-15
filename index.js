@@ -30,24 +30,31 @@ function sanitizeIpAddress(ipAddress) {
 
 // Call getIp to fetch the IP address
 getIp().then(() => {
+
     // Now, ipAddress should be available, and you can create the Firebase reference
     if (ipAddress) {
         // Sanitize the IP address before using it in the path
         const sanitizedIp = sanitizeIpAddress(ipAddress);
         const itemsInDB = ref(database, `${sanitizedIp}/cart`);
-
+        let count = 1;
         // Select your HTML elements
         const cartBtn = document.getElementById("cart");
         const itemInput = document.getElementById("items");
         const cartList = document.getElementById("cartList");
-
         cartBtn.addEventListener("click", function(){
             if(itemInput.value == '') {
                 cartList.innerHTML = `<li class="px-4 py-2 bg-red-600/80 rounded-md shadow-md flex-grow">Please enter an item 😊</li>`;
             } else {
                 push(itemsInDB, itemInput.value);
+                if (count === 1) {
+                    cartList.innerHTML = '';
+                    addToCart(itemInput.value);
+                    count++;
+                }
+                else{
+                    addToCart(itemInput.value);
+                }
                 clearInput();
-                addToCart(itemInput.value);
             }
         });
 
@@ -61,6 +68,7 @@ getIp().then(() => {
                 }
             } else {
                 cartList.innerHTML = `<li class="px-4 py-2 bg-red-600/80 rounded-md shadow-md flex-grow">No items here yet... 🫠</li>`;
+                count = 1;
             }
         });
 
