@@ -30,13 +30,12 @@ function sanitizeIpAddress(ipAddress) {
 
 // Call getIp to fetch the IP address
 getIp().then(() => {
-
     // Now, ipAddress should be available, and you can create the Firebase reference
     if (ipAddress) {
         // Sanitize the IP address before using it in the path
         const sanitizedIp = sanitizeIpAddress(ipAddress);
         const itemsInDB = ref(database, `${sanitizedIp}/cart`);
-        let count = 1;
+
         // Select your HTML elements
         const cartBtn = document.getElementById("cart");
         const itemInput = document.getElementById("items");
@@ -46,15 +45,8 @@ getIp().then(() => {
                 cartList.innerHTML = `<li class="px-4 py-2 bg-red-600/80 rounded-md shadow-md flex-grow">Please enter an item 😊</li>`;
             } else {
                 push(itemsInDB, itemInput.value);
-                if (count === 1) {
-                    cartList.innerHTML = '';
-                    addToCart(itemInput.value);
-                    count++;
-                }
-                else{
-                    addToCart(itemInput.value);
-                }
                 clearInput();
+                addToCart(itemInput.value);
             }
         });
 
@@ -66,9 +58,8 @@ getIp().then(() => {
                     let currentItem = cartArray[i];
                     addToCart(currentItem);
                 }
-            } else {
-                cartList.innerHTML = `<li class="px-4 py-2 bg-red-600/80 rounded-md shadow-md flex-grow">No items here yet... 🫠</li>`;
-                count = 1;
+            } else {    
+                clearCart();
             }
         });
 
@@ -77,9 +68,11 @@ getIp().then(() => {
         }
 
         function addToCart(item) {
+            
             let itemId = item[0];
             let itemValue = item[1];
             let newItem = document.createElement('li');
+
             newItem.setAttribute("class", "px-4 py-2 bg-red-600/80 rounded-md shadow-md flex-grow text-center");
             newItem.textContent = itemValue;
             newItem.addEventListener('dblclick', () => {
