@@ -72,7 +72,7 @@ getIp().then(() => {
             let itemId = item[0];
             let itemValue = item[1];
             let newItem = document.createElement('li');
-            newItem.setAttribute("class", "px-4 py-2 bg-red-600/80 rounded-md shadow-md flex-grow");
+            newItem.setAttribute("class", "px-4 py-2 bg-red-600/80 rounded-md shadow-md flex-grow text-center");
             newItem.textContent = itemValue;
             newItem.addEventListener('dblclick', () => {
                 let location =  ref(database, `${sanitizedIp}/cart/${itemId}`);
